@@ -9,7 +9,7 @@ index 10b674d..7df2f72 100644
 +		// Prevent automatic enabling of extensions
 +		if (newState === EnablementState.EnabledGlobally || newState === EnablementState.EnabledWorkspace) {
 +			// Check if the extensions should not be enabled automatically
-+			const preventAutoEnablement = /* Your logic to determine if auto enabling should be prevented */;
++			const preventAutoEnablement = true; /* Your logic to determine if auto enabling should be prevented */;
 +			if (preventAutoEnablement) {
 +				// Optionally log or handle the case where automatic enabling is prevented
 +				return extensions.map(() => false); // Return false for each extension to indicate no change
