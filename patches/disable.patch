@@ -1,0 +1,22 @@
+diff --git a/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts b/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts
+index 10b674d..7df2f72 100644
+--- a/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts
++++ b/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts
+@@ -203,6 +203,17 @@ export class ExtensionEnablementService extends Disposable implements IWorkbench
+ 	async setEnablement(extensions: IExtension[], newState: EnablementState): Promise<boolean[]> {
+ 		await this.extensionsManager.whenInitialized();
+ 
++		// Prevent automatic enabling of extensions
++		if (newState === EnablementState.EnabledGlobally || newState === EnablementState.EnabledWorkspace) {
++			// Check if the extensions should not be enabled automatically
++			const preventAutoEnablement = /* Your logic to determine if auto enabling should be prevented */;
++			if (preventAutoEnablement) {
++				// Optionally log or handle the case where automatic enabling is prevented
++				return extensions.map(() => false); // Return false for each extension to indicate no change
++			}
++			extensions.push(...this.getExtensionsToEnableRecursively(extensions, this.extensionsManager.extensions, newState, { dependencies: true, pack: true }));
++		}
++
+ 		if (newState === EnablementState.EnabledGlobally || newState === EnablementState.EnabledWorkspace) {
+ 			extensions.push(...this.getExtensionsToEnableRecursively(extensions, this.extensionsManager.extensions, newState, { dependencies: true, pack: true }));
+ 		}
