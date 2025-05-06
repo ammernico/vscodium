@@ -1,0 +1,17 @@
+diff --git a/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts b/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts
+index 10b674d..9fd77fe 100644
+--- a/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts
++++ b/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts
+@@ -292,9 +292,9 @@ export class ExtensionEnablementService extends Disposable implements IWorkbench
+ 			}
+ 		}
+ 
+-		if (extensionsToEnable.length) {
+-			extensionsToEnable.push(...this.getExtensionsToEnableRecursively(extensionsToEnable, allExtensions, enablementState, options, checked));
+-		}
++		//if (extensionsToEnable.length) {
++		//	extensionsToEnable.push(...this.getExtensionsToEnableRecursively(extensionsToEnable, allExtensions, enablementState, options, checked));
++		//}
+ 
+ 		return extensionsToEnable;
+ 	}
