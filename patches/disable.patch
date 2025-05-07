@@ -1,22 +1,29 @@
 diff --git a/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts b/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts
-index 10b674d..7df2f72 100644
+index 10b674d..d6b8ab4 100644
 --- a/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts
 +++ b/src/vs/workbench/services/extensionManagement/browser/extensionEnablementService.ts
-@@ -203,6 +203,17 @@ export class ExtensionEnablementService extends Disposable implements IWorkbench
- 	async setEnablement(extensions: IExtension[], newState: EnablementState): Promise<boolean[]> {
- 		await this.extensionsManager.whenInitialized();
+@@ -276,19 +276,11 @@ export class ExtensionEnablementService extends Disposable implements IWorkbench
  
-+		// Prevent automatic enabling of extensions
-+		if (newState === EnablementState.EnabledGlobally || newState === EnablementState.EnabledWorkspace) {
-+			// Check if the extensions should not be enabled automatically
-+			const preventAutoEnablement = true; /* Your logic to determine if auto enabling should be prevented */;
-+			if (preventAutoEnablement) {
-+				// Optionally log or handle the case where automatic enabling is prevented
-+				return extensions.map(() => false); // Return false for each extension to indicate no change
-+			}
-+			extensions.push(...this.getExtensionsToEnableRecursively(extensions, this.extensionsManager.extensions, newState, { dependencies: true, pack: true }));
-+		}
-+
- 		if (newState === EnablementState.EnabledGlobally || newState === EnablementState.EnabledWorkspace) {
- 			extensions.push(...this.getExtensionsToEnableRecursively(extensions, this.extensionsManager.extensions, newState, { dependencies: true, pack: true }));
+ 				const index = extensionsToEnable.findIndex(e => areSameExtensions(e.identifier, extension.identifier));
+ 
+-				// Extension is not added to the disablement list so add it
+-				if (index === -1) {
+-					extensionsToEnable.push(extension);
+-				}
+-
+-				// Extension is there already in the disablement list.
+-				else {
+-					try {
+-						// Replace only if the enablement state can be changed
+-						this.throwErrorIfEnablementStateCannotBeChanged(extension, enablementStateOfExtension, true);
+-						extensionsToEnable.splice(index, 1, extension);
+-					} catch (error) { /*Do not add*/ }
+-				}
++				try {
++					// Replace only if the enablement state can be changed
++					this.throwErrorIfEnablementStateCannotBeChanged(extension, enablementStateOfExtension, true);
++					extensionsToEnable.splice(index, 1, extension);
++				} catch (error) { /*Do not add*/ }
+ 			}
  		}
+ 
